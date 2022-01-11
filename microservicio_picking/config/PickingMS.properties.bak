@@ -1,0 +1,25 @@
+#Puerto de la aplicacion
+ms_port= 8080
+##---------Conexion a la Base de Datos-----------------
+##DRIVER=com.mysql.jdbc.Driver
+DRIVER=com.sybase.jdbc4.jdbc.SybDriver
+
+#Conexion desde Server
+#URL=jdbc:mysql
+
+#Conexion desde Local
+
+#URL:jdbc:sybase:Tds:192.200.1.109:2638 lab memo Barrientos
+#URL=jdbc:sybase:Tds:192.168.90.7:2638
+URL:jdbc:sybase:Tds:201.161.90.112:2638
+USUARIO=dba
+PASSWORD=202112a
+
+#URL:jdbc:sybase:Tds:192.168.30.7:2638
+#USUARIO=dba
+#PASSWORD=202009e
+
+##### CONSTANTES DE VALIDACION DE LA SESION #####
+VALIDA_SESION=true
+REDIRECT=/faces/xhtml/login/Acceso.xhtml
+REDIRECT_ERROR=/faces/xhtml/login/Acceso.xhtml
