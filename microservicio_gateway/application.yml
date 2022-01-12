@@ -22,6 +22,10 @@ spring:
         uri: lb://ms-usuarios-t3b
         predicates:
           - Path=/Usuarios/**
+      - id: ms-inventory-t3b
+        uri: lb://ms-inventory-t3b
+        predicates:
+          - Path=/inventory/**
       
 eureka:
   instance:
