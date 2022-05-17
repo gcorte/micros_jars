@@ -1,5 +1,5 @@
 server:
-    port: 8890
+    port: 8090
 spring:
   application:
     name: ms-gateway-t3b
@@ -25,8 +25,21 @@ spring:
       - id: ms-inventory-t3b
         uri: lb://ms-inventory-t3b
         predicates:
-          - Path=/**
-  
+          - Path=/inventory/**
+      - id: ms-customer-t3b
+        uri: lb://ms-customer-t3b
+        predicates:
+          - Path=/customer/**
+      - id: ms-catalogos-almacen
+        uri: lb://ms-catalogos-almacen
+        predicates:
+          - Path=/almacen/rest/sync/**
+      - id: ms-epackage-t3b
+        uri: lb://ms-epackage-t3b
+        predicates:
+          - Path=/almacen/rest/epackage/**
+          
+                
 eureka:
   instance:
     instance-id: ${spring.application.name}
