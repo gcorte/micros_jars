@@ -1,0 +1,33 @@
+server:
+    port: 8080
+spring: 
+  application:
+    name: ms-epackage-t3b
+    
+management: 
+  endpoints:
+    web:
+      exposure:
+        include: "*"  
+  endpoint:
+    health:
+      show-details: ALWAYS
+          
+eureka:  
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+    register-with-eureka: false
+    fetch-registry: false
+    
+config:
+  balanceador:
+    test: ${BALANCELADOR_TEST:${spring.application.name}:(1)}
+    
+springdoc:
+  swagger-ui:
+    path: /almacen/rest/docs/epackage/swagger
+  api-docs:
+    path: /almacen/rest/docs/epackage/api-docs
