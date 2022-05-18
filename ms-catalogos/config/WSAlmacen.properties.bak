@@ -1,0 +1,16 @@
+#archivo de propiedades para aplicacion web
+#propiedades de conexion a la base de datos
+host=201.161.90.112
+#host=192.168.30.7
+port=2638
+user=dba
+pass=###
+#name=abastex_reyes
+#name=labr1002
+jdni=x
+surl=jdbc:sybase:Tds:
+driv=com.sybase.jdbc4.jdbc.SybDriver
+
+#propiedades para el microservicio
+ms.port=8788
+ms.port.almacen=8902
