@@ -6,7 +6,7 @@ const fs = require('fs');
 const express = require('express');
 const cors = require('cors')
 const qrcode = require('qrcode-terminal');
-const { Client } = require('whatsapp-web.js');
+const { Client, LocalAuth} = require('whatsapp-web.js');
 const mysqlConnection = require('./config/mysql')
 const { middlewareClient } = require('./middleware/client')
 const { generateImage, cleanNumber, checkEnvFile, createClient, isValidNumber } = require('./controllers/handle')
@@ -131,14 +131,35 @@ const listenMessage = () => client.on('message', async msg => {
  * Revisamos si tenemos credenciales guardadas para inciar sessio
  * este paso evita volver a escanear el QRCODE
  */
+
+// No funciona este codigo para la version nueva de whatsapp-web-js
+
 const withSession = () => {
     console.log(`Validando session con Whatsapp...`)
-    sessionData = require(SESSION_FILE_PATH);
-    client = new Client(createClient(sessionData,true));
+    //sessionData = require(SESSION_FILE_PATH);
+    //client = new Client(createClient(sessionData,true));
+    
+    	client = new Client({
+		authStrategy: new LocalAuth()
+	});
 
-    client.on('ready', () => {
-        connectionReady()
-        listenMessage()
+
+	client.on('qr', (qr) => {
+	    // Generate and scan this code with your phone
+	    // console.log('QR RECEIVED', qr);
+		qrcode.generate(qr, {small: true});
+	});
+
+	client.on('ready', () => {
+	    console.log('Client is ready!');
+	    connectionReady()
+            listenMessage()
+	});
+	
+
+    client.on('disconnected', (reason) => {
+
+	console.log('Session desconectada! ',reason);
     });
 
     client.on('auth_failure', () => connectionLost())
@@ -146,10 +167,12 @@ const withSession = () => {
     client.initialize();
 }
 
+
 /**
  * Generamos un QRCODE para iniciar sesion
  */
 const withOutSession = () => {
+/*
     console.log('No tenemos session guardada');
     console.log([
         '🙌 El core de whatsapp se esta actualizando',
@@ -160,13 +183,18 @@ const withOutSession = () => {
         '🙌 Ten paciencia se esta generando el QR CODE',
         '________________________',
     ].join('\n'));
-
-    client = new Client(createClient());
+*/
+// No funciona este codigo para la version nueva de whatsapp-web-js
+    //client = new Client(createClient());
+    
+    client = new Client({
+    	authStrategy: new LocalAuth()
+    });
 
     client.on('qr', qr => generateImage(qr, () => {
         qrcode.generate(qr, { small: true });
         console.log(`Ver QR http://localhost:${port}/qr`)
-        socketEvents.sendQR(qr)
+        //socketEvents.sendQR(qr)
     }))
 
     client.on('ready', (a) => {
@@ -181,13 +209,14 @@ const withOutSession = () => {
     });
 
     client.on('authenticated', (sec) => {
+    
+    console.log(`Autenticado!!!`);
 
-
+     // No funciona este codigo para la version nueva de whatsapp-web-js	
+    /*
         sessionData = sec;
 
         console.log(`Se ha autenticado satisfactoriamente con QR `, sessionData);
-
-        console.log(`Se ha autenticado satisfactoriamente con QR `, sec);
 
         if(sessionData){
 
@@ -199,6 +228,8 @@ const withOutSession = () => {
                 }
             });
         }
+        
+    */
     });
 
     client.initialize();
@@ -207,7 +238,10 @@ const withOutSession = () => {
 /**
  * Revisamos si existe archivo con credenciales!
  */
-(fs.existsSync(SESSION_FILE_PATH) && MULTI_DEVICE === 'false') ? withSession() : withOutSession();
+//	Se comenta ya que no funciona crear el archivo de ssesion en las version nueva de whatsapp-web-js
+//(fs.existsSync(SESSION_FILE_PATH) && MULTI_DEVICE === 'false') ? withSession() : withOutSession();
+
+withSession();
 
 /**
  * Verificamos si tienes un gesto de db
